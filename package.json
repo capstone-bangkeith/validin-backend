@@ -23,6 +23,7 @@
   "dependencies": {
     "@fastify/helmet": "^8.0.1",
     "@prisma/client": "^3.14.0",
+    "@sinclair/typebox": "^0.23.5",
     "fastify": "^3.29.0",
     "fastify-plugin": "^3.0.1"
   },
