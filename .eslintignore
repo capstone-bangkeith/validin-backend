@@ -1,0 +1,5 @@
+node_modules
+bin
+*.js
+dist
+*.config.ts

@@ -1,0 +1,47 @@
+{
+  "name": "bangkit-capstone-c22-ky05",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "LordRonz <aarontanhar2000@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --silent",
+    "dev": "nodemon ./src/index.ts",
+    "start:node": "node ./dist/index.js",
+    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "start:daemon": "pm2 start ecosystem.config.json",
+    "pm2": "pm2",
+    "start:ts": "ts-node ./src/index.ts",
+    "lint": "eslint ./src --ext .ts",
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "tsc": "tsc --pretty --noEmit --incremental false",
+    "prepare": "husky install",
+    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up"
+  },
+  "dependencies": {
+    "@fastify/helmet": "^8.0.1",
+    "@prisma/client": "^3.14.0",
+    "fastify": "^3.29.0",
+    "fastify-plugin": "^3.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
+    "@types/node": "^17.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.4.1",
+    "nodemon": "^2.0.16",
+    "pino-pretty": "^7.6.1",
+    "prettier": "^2.6.2",
+    "prisma": "^3.14.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
+}

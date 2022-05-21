@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./kodewilayah.db"
+}
+
+model KodeWilayah {
+  kodewilayah   String  @id @unique
+  provinsi      String  @unique
+  kabupatenkota String
+  kecamatan     String
+}
