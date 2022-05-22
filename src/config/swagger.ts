@@ -1,5 +1,6 @@
-import fastifySwagger, { SwaggerOptions } from '@fastify/swagger';
-import { FastifyInstance } from 'fastify';
+import type { SwaggerOptions } from '@fastify/swagger';
+import fastifySwagger from '@fastify/swagger';
+import type { FastifyInstance } from 'fastify';
 
 import { KodeWilayahType } from '../schema/kodeWilayah.schema';
 

@@ -9,6 +9,8 @@ import {
 
 type IQuerystring = {
   kode?: string;
+  limit?: number;
+  page?: number;
 };
 
 type IParams = {
@@ -20,11 +22,18 @@ export const kodeWilayahPlugin: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: kodeWilayahSchemaGetAll },
     async (request, reply) => {
+      const limit = request.query.limit ?? 10;
+      const page = request.query.page ?? 1;
+
       const data = request.query.kode
         ? await prisma.kodeWilayah.findMany({
             where: { kodewilayah: request.query.kode },
           })
-        : await prisma.kodeWilayah.findMany();
+        : await prisma.kodeWilayah.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
+          });
+
       if (!data) {
         return reply.status(httpStatus.NOT_FOUND).send({
           error: httpStatus[httpStatus.NOT_FOUND],

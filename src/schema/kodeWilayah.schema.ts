@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox';
-import { FastifySchema } from 'fastify';
+import type { FastifySchema } from 'fastify';
 
 import { ErrorResponse } from './error.schema';
 
@@ -26,6 +26,8 @@ export const kodeWilayahSchemaGetAll: FastifySchema = {
   querystring: Type.Optional(
     Type.Object({
       kode: Type.Optional(Type.String({ description: 'Kode wilayah' })),
+      limit: Type.Optional(Type.Number({ minimum: 1 })),
+      page: Type.Optional(Type.Number({ minimum: 1 })),
     })
   ),
   response: {
