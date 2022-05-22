@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 
-import * as kodeWilayah from './kode-wilayah';
+import * as kodeWilayah from './kodeWilayah.route';
 
 const routes = [
   {

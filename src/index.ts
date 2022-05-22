@@ -1,21 +1,19 @@
-import fastifyHelmet from '@fastify/helmet';
-import fastify from 'fastify';
+import buildApp from './app';
+import config from './config/config';
 
-import router from './routes';
+(async () => {
+  const server = await buildApp();
 
-const server = fastify({
-  logger: {
-    prettyPrint: process.env.NODE_ENV === 'development',
-  },
-});
+  server.ready((err) => {
+    if (err) {
+      server.log.error(err);
+    }
+  });
 
-server.register(fastifyHelmet);
-
-server.register(router);
-
-server.listen(8080, (err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-});
+  server.listen(config.PORT, (err) => {
+    if (err) {
+      server.log.error(err);
+      process.exit(1);
+    }
+  });
+})();
