@@ -21,7 +21,7 @@
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up"
   },
   "dependencies": {
-    "@fastify/helmet": "^8.0.1",
+    "@fastify/helmet": "^8.1.0",
     "@fastify/swagger": "^6.0.1",
     "@prisma/client": "^3.14.0",
     "@sinclair/typebox": "^0.23.5",
