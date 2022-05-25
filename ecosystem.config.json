@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "validin-backend",
-      "script": "dist/server.js",
+      "script": "dist/index.js",
       "instances": 0,
       "autorestart": true,
       "watch": false,
