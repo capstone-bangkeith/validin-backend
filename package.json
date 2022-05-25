@@ -40,7 +40,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^8.0.1",
-    "lint-staged": "^12.4.1",
+    "lint-staged": "^12.4.2",
     "nodemon": "^2.0.16",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
