@@ -41,5 +41,7 @@ const options: SwaggerOptions = {
 };
 
 export const registerSwagger = async (fastify: FastifyInstance) => {
-  await fastify.register(fastifySwagger, options);
+  if (process.env.NODE_ENV !== 'production') {
+    await fastify.register(fastifySwagger, options);
+  }
 };
