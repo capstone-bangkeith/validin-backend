@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./kodewilayah.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model KodeWilayah {
   kodewilayah   String  @id @unique
-  provinsi      String  @unique
+  provinsi      String
   kabupatenkota String
   kecamatan     String
 }

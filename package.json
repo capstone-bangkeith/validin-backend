@@ -18,6 +18,7 @@
     "format:check": "prettier -c .",
     "tsc": "tsc --pretty --noEmit --incremental false",
     "prepare": "husky install",
+    "prisma": "prisma",
     "docker:prod": "docker compose -f docker-compose.yml -f docker-compose.prod.yml up"
   },
   "dependencies": {
