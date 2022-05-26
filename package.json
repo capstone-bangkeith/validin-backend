@@ -18,7 +18,7 @@
     "format:check": "prettier -c .",
     "tsc": "tsc --pretty --noEmit --incremental false",
     "prepare": "husky install",
-    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up"
+    "docker:prod": "docker compose -f docker-compose.yml -f docker-compose.prod.yml up"
   },
   "dependencies": {
     "@fastify/helmet": "^8.1.0",
