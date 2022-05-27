@@ -26,10 +26,10 @@ export const kodeWilayahPlugin: FastifyPluginAsync = async (fastify) => {
       const page = request.query.page ?? 1;
 
       const data = request.query.kode
-        ? await prisma.kodeWilayah.findMany({
+        ? await prisma.kodewilayah.findMany({
             where: { kodewilayah: request.query.kode },
           })
-        : await prisma.kodeWilayah.findMany({
+        : await prisma.kodewilayah.findMany({
             skip: (page - 1) * limit,
             take: limit,
           });
@@ -49,7 +49,7 @@ export const kodeWilayahPlugin: FastifyPluginAsync = async (fastify) => {
     '/:kode',
     { schema: kodeWilayahSchemaGetUnique },
     async (request, reply) => {
-      const data = await prisma.kodeWilayah.findUnique({
+      const data = await prisma.kodewilayah.findUnique({
         where: { kodewilayah: request.params.kode },
       });
       if (!data) {
