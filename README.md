@@ -2,6 +2,17 @@
 
 This project is using [Fastify](https://www.fastify.io/) as the server.
 
+## Stack
+
+- [Node.js](https://nodejs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Fastify](https://www.fastify.io/)
+- [Prisma](https://www.prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Cloud SQL](https://cloud.google.com/sql)
+- [Compute Engine](https://cloud.google.com/compute)
+- [Cloud Storage](https://cloud.google.com/storage)
+
 ## Development
 
 - Run `yarn install` to install dependencies and generate node_modules.
