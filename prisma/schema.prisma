@@ -7,8 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model KodeWilayah {
-  kodewilayah   String  @id @unique
+model kodewilayah {
+  kodewilayah   String  @id
   provinsi      String
   kabupatenkota String
   kecamatan     String
