@@ -8,8 +8,24 @@ datasource db {
 }
 
 model kodewilayah {
-  kodewilayah   String  @id
-  provinsi      String
-  kabupatenkota String
-  kecamatan     String
+  kodewilayah   String  @db.VarChar(20) @id
+  provinsi      String  @db.VarChar(255)
+  kabupatenkota String  @db.VarChar(255)
+  kecamatan     String  @db.VarChar(255)
+}
+
+model ktp {
+  id                Int       @id               @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  nama              String    @db.VarChar(255)
+  nik               String    @db.VarChar(255)  @unique
+  alamat            String    @db.VarChar(255)
+  rt_rw             String    @db.VarChar(255)
+  kel_desa          String    @db.VarChar(255)
+  kecamatan         String    @db.VarChar(255)
+  agama             String    @db.VarChar(50)
+  status_perkawinan String    @db.VarChar(50)
+  pekerjaan         String    @db.VarChar(50)
+  kewarganegaraan   String    @db.VarChar(50)
 }
