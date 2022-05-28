@@ -1,6 +1,8 @@
 import fastifyHelmet from '@fastify/helmet';
+import fastifyRedis from '@fastify/redis';
 import fastify from 'fastify';
 
+import { REDIS_HOST, REDIS_PASS } from './config/config';
 import prisma from './config/prismaClient';
 import { registerSwagger } from './config/swagger';
 import router from './routes';
@@ -13,6 +15,10 @@ const buildApp = async () => {
   });
 
   await server.register(fastifyHelmet);
+  await server.register(fastifyRedis, {
+    host: REDIS_HOST,
+    password: REDIS_PASS,
+  });
 
   await registerSwagger(server);
 

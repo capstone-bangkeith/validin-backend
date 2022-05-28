@@ -12,6 +12,7 @@ This project is using [Fastify](https://www.fastify.io/) as the server.
 - [Cloud SQL](https://cloud.google.com/sql)
 - [Compute Engine](https://cloud.google.com/compute)
 - [Cloud Storage](https://cloud.google.com/storage)
+- [Redis](https://redis.io/)
 
 ## Development
 

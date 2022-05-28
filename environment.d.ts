@@ -4,6 +4,8 @@ declare global {
       NODE_ENV: 'development' | 'production';
       PORT?: string;
       PROJECT_ID: string;
+      REDIS_PASS?: string;
+      REDIS_HOST?: string;
     }
   }
 }

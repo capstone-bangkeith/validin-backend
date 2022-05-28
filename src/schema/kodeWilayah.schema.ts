@@ -25,9 +25,11 @@ export const kodeWilayahSchemaGetAll: FastifySchema = {
   ...kodeWilayahSchemaBase,
   querystring: Type.Optional(
     Type.Object({
-      kode: Type.Optional(Type.String({ description: 'Kode wilayah' })),
-      limit: Type.Optional(Type.Number({ minimum: 1 })),
-      page: Type.Optional(Type.Number({ minimum: 1 })),
+      kode: Type.Optional(
+        Type.RegEx(/^\d{6}$/, { description: 'Kode wilayah' })
+      ),
+      limit: Type.Optional(Type.Number({ minimum: 1, maximum: 169 })),
+      page: Type.Optional(Type.Number({ minimum: 1, maximum: 7000 })),
     })
   ),
   response: {
@@ -39,7 +41,7 @@ export const kodeWilayahSchemaGetAll: FastifySchema = {
 export const kodeWilayahSchemaGetUnique: FastifySchema = {
   ...kodeWilayahSchemaBase,
   params: Type.Object({
-    kode: Type.Optional(Type.String({ description: 'Kode wilayah' })),
+    kode: Type.Optional(Type.RegEx(/^\d{6}$/, { description: 'Kode wilayah' })),
   }),
   response: {
     200: Type.Object({
