@@ -16,4 +16,4 @@ import config from './config/config';
       process.exit(1);
     }
   });
-})();
+})().catch((e) => console.error(e));

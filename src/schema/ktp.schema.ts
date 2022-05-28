@@ -5,10 +5,13 @@ import { ErrorResponse } from './error.schema';
 
 export const KtpType = Type.Object(
   {
+    id: Type.Number(),
+    createdAt: Type.String({ format: 'date-time' }),
+    updatedAt: Type.String({ format: 'date-time' }),
     nama: Type.String(),
     nik: Type.String(),
     alamat: Type.String(),
-    rtRw: Type.String(),
+    rt_rw: Type.String(),
     kelDesa: Type.String(),
     kecamatan: Type.String(),
     agama: Type.String(),
