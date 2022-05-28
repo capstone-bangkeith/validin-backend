@@ -19,7 +19,7 @@ type IParams = {
   kode: string;
 };
 
-export const kodeWilayahPlugin: FastifyPluginAsync = async (fastify) => {
+export const plugin: FastifyPluginAsync = async (fastify) => {
   const { redis } = fastify;
 
   fastify.get<{ Querystring: IQuerystring }>(

@@ -12,18 +12,36 @@ export const KtpType = Type.Object(
     nik: Type.String(),
     alamat: Type.String(),
     rt_rw: Type.String(),
-    kelDesa: Type.String(),
+    kel_desa: Type.String(),
     kecamatan: Type.String(),
     agama: Type.String(),
-    statusPerkawinan: Type.String(),
+    status_perkawinan: Type.String(),
     pekerjaan: Type.String(),
     kewarganegaraan: Type.String(),
   },
-  { description: 'Kode wilayah properties' }
+  { description: 'KTP properties' }
+);
+
+export const KtpPostType = Type.Object(
+  {
+    createdAt: Type.String({ format: 'date-time' }),
+    updatedAt: Type.String({ format: 'date-time' }),
+    nama: Type.String({ maxLength: 69, minLength: 2 }),
+    nik: Type.RegEx(/^\d{16}$/),
+    alamat: Type.String({ maxLength: 50 }),
+    rt_rw: Type.String({ maxLength: 50 }),
+    kel_desa: Type.String({ maxLength: 50 }),
+    kecamatan: Type.String({ maxLength: 50 }),
+    agama: Type.String({ maxLength: 20 }),
+    status_perkawinan: Type.String({ maxLength: 20 }),
+    pekerjaan: Type.String({ maxLength: 20 }),
+    kewarganegaraan: Type.String({ maxLength: 20 }),
+  },
+  { description: 'KTP properties' }
 );
 
 const PostKtpResponse = Type.Object({
-  data: KtpType,
+  data: KtpPostType,
 });
 
 const ktpSchemaBase: FastifySchema = {
@@ -32,14 +50,14 @@ const ktpSchemaBase: FastifySchema = {
 
 export const ktpSchemaPost: FastifySchema = {
   ...ktpSchemaBase,
-  body: KtpType,
+  body: KtpPostType,
 };
 
-export const ktpSchemaGet: FastifySchema = {
+export const ktpSchemaGetAll: FastifySchema = {
   ...ktpSchemaBase,
   querystring: Type.Optional(
     Type.Object({
-      kode: Type.Optional(Type.String({ description: 'KTP' })),
+      nik: Type.Optional(Type.RegEx(/^\d{16}$/, { description: 'KTP' })),
       limit: Type.Optional(Type.Number({ minimum: 1 })),
       page: Type.Optional(Type.Number({ minimum: 1 })),
     })
@@ -53,7 +71,9 @@ export const ktpSchemaGet: FastifySchema = {
 export const ktpSchemaGetUnique: FastifySchema = {
   ...ktpSchemaBase,
   params: Type.Object({
-    kode: Type.Optional(Type.String({ description: 'Kode wilayah' })),
+    nik: Type.Optional(
+      Type.String({ description: 'Nomor Induk Kependudukan' })
+    ),
   }),
   response: {
     200: Type.Object({

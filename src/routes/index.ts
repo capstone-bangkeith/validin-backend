@@ -1,11 +1,16 @@
 import type { FastifyPluginAsync } from 'fastify';
 
 import * as kodeWilayah from './kodeWilayah.route';
+import * as ktp from './ktp.route';
 
 const routes = [
   {
-    plugin: kodeWilayah.kodeWilayahPlugin,
+    plugin: kodeWilayah.plugin,
     prefix: kodeWilayah.prefix,
+  },
+  {
+    plugin: ktp.plugin,
+    prefix: ktp.prefix,
   },
 ];
 

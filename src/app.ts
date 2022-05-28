@@ -1,4 +1,5 @@
 import fastifyHelmet from '@fastify/helmet';
+import fastifyMultipart from '@fastify/multipart';
 import fastifyRedis from '@fastify/redis';
 import fastify from 'fastify';
 
@@ -15,6 +16,7 @@ const buildApp = async () => {
   });
 
   await server.register(fastifyHelmet);
+  await server.register(fastifyMultipart);
   await server.register(fastifyRedis, {
     host: REDIS_HOST,
     password: REDIS_PASS,
