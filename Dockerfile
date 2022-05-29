@@ -1,4 +1,4 @@
-FROM node:latest as builder
+FROM node:lts-alpine as builder
 
 RUN mkdir -p /usr/src/node-app && chown -R node:node /usr/src/node-app
 
@@ -15,13 +15,13 @@ COPY --chown=node:node . .
 RUN yarn build
 
 
-FROM node:latest as server
+FROM node:lts-alpine as server
 
 RUN mkdir -p /usr/src/node-app && chown -R node:node /usr/src/node-app
 
 WORKDIR /usr/src/node-app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock prisma ./
 
 USER node
 

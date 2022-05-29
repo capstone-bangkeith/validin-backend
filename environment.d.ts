@@ -6,6 +6,7 @@ declare global {
       PROJECT_ID: string;
       REDIS_PASS?: string;
       REDIS_HOST?: string;
+      CLOUD_STORAGE_CREDS_PATH?: string;
     }
   }
 }
