@@ -24,8 +24,7 @@ export const KtpType = Type.Object(
 
 export const KtpPostType = Type.Object(
   {
-    createdAt: Type.String({ format: 'date-time' }),
-    updatedAt: Type.String({ format: 'date-time' }),
+    ktp: Type.Any(),
     nama: Type.String({ maxLength: 69, minLength: 2 }),
     nik: Type.RegEx(/^\d{16}$/),
     alamat: Type.String({ maxLength: 50 }),

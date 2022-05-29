@@ -1,8 +1,14 @@
 import type { FastifyPluginAsync } from 'fastify';
 import httpStatus from 'http-status';
+import mime from 'mime-types';
 
+import storage from '../config/cloudStorage';
 import prisma from '../config/prismaClient';
-import { ktpSchemaGetAll, ktpSchemaGetUnique } from '../schema/ktp.schema';
+import {
+  ktpSchemaGetAll,
+  ktpSchemaGetUnique,
+  ktpSchemaPost,
+} from '../schema/ktp.schema';
 
 type IQuerystring = {
   nik?: string;
@@ -10,11 +16,33 @@ type IQuerystring = {
   page?: number;
 };
 
+type IBody = {
+  nama: string;
+  nik: string;
+  alamat: string;
+  rt_rw: string;
+  kel_desa: string;
+  kecamatan: string;
+  agama: string;
+  status_perkawinan: string;
+  pekerjaan: string;
+  kewarganegaraan: string;
+  ktp: {
+    data: Buffer;
+    filename: string;
+    encoding: string;
+    mimetype: string;
+    limit: true;
+  }[];
+};
+
 type IParams = {
   nik: string;
 };
 
 export const plugin: FastifyPluginAsync = async (fastify) => {
+  const bucket = storage.bucket('chumybucket');
+
   fastify.get<{ Querystring: IQuerystring }>(
     '/',
     { schema: ktpSchemaGetAll },
@@ -58,6 +86,22 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         });
       }
       return reply.send({ data });
+    }
+  );
+
+  fastify.post<{ Body: IBody }>(
+    '/',
+    { schema: ktpSchemaPost },
+    async (request, reply) => {
+      const { data, mimetype } = request.body.ktp[0];
+      await bucket
+        .file(`ktp/${request.body.nik}.${mime.extension(mimetype)}`)
+        .save(data);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { ktp, ...ktpData } = request.body;
+      const ktpRes = await prisma.ktp.create({ data: ktpData });
+      return reply.send({ data: ktpRes });
     }
   );
 };

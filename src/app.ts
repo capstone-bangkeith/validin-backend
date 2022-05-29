@@ -16,7 +16,9 @@ const buildApp = async () => {
   });
 
   await server.register(fastifyHelmet);
-  await server.register(fastifyMultipart);
+  await server.register(fastifyMultipart, {
+    addToBody: true,
+  });
   await server.register(fastifyRedis, {
     host: REDIS_HOST,
     password: REDIS_PASS,
