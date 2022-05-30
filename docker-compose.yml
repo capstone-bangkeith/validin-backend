@@ -6,12 +6,19 @@ services:
     image: node-app
     environment:
       - PORT=3001
+      - REDIS_HOST=redis
     ports:
       - '3001:3001'
     volumes:
       - .:/usr/src/node-app
     networks:
       - node-network
+
+  redis:
+    container_name: redis
+    image: 'redis'
+    ports:
+      - '6379:6379'
 
 networks:
   node-network:
