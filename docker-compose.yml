@@ -15,3 +15,10 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/node-app
+
+  nginx:
+    build: ./nginx
+    ports:
+      - '80:80'
+    depends_on:
+      - node-app
