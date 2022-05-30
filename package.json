@@ -8,6 +8,7 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "clean:modules": "rimraf node_modules",
+    "deduplicate": "npx yarn-deduplicate && yarn install",
     "dev": "nodemon ./src/index.ts",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:prod:new": "docker compose -f docker-compose.yml -f docker-compose.prod.yml up",
