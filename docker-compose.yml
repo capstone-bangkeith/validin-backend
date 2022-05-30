@@ -4,6 +4,8 @@ services:
   redis:
     container_name: redis
     image: 'redis'
+    networks:
+      - node-network
 
   node-app:
     build: .
