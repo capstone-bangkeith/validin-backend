@@ -2,8 +2,7 @@ version: '3'
 
 services:
   redis:
-    container_name: redis
-    image: 'redis'
+    image: 'redis:alpine'
     networks:
       - node-network
 
@@ -17,10 +16,9 @@ services:
       - '3001:3001'
     networks:
       - node-network
-    command: yarn start
 
   nginx:
-    image: nginx
+    image: nginx:stable-alpine
     ports:
       - '80:80'
     depends_on:
