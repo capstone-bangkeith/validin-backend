@@ -11,8 +11,10 @@ updates:
       interval: 'daily'
     assignees:
       - 'LordRonz'
+      - 'znordrol'
     reviewers:
       - 'LordRonz'
+      - 'znordrol'
     commit-message:
       prefix: 'chore(deps): '
     labels:
