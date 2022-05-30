@@ -14,6 +14,7 @@ This project is using [Fastify](https://www.fastify.io/) as the server.
 - [Cloud Storage](https://cloud.google.com/storage)
 - [Redis](https://redis.io/)
 - [Docker](https://www.docker.com/)
+- [NGINX](https://www.nginx.com/)
 
 ## Development
 
