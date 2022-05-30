@@ -2,5 +2,5 @@ version: '3'
 
 services:
   node-app:
-    container_name: node-app-prod
+    container_name: node-app
     command: yarn start
