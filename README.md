@@ -13,6 +13,7 @@ This project is using [Fastify](https://www.fastify.io/) as the server.
 - [Compute Engine](https://cloud.google.com/compute)
 - [Cloud Storage](https://cloud.google.com/storage)
 - [Redis](https://redis.io/)
+- [Docker](https://www.docker.com/)
 
 ## Development
 
