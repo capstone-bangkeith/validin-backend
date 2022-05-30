@@ -10,7 +10,7 @@ import config from './config/config';
     }
   });
 
-  server.listen(config.PORT, (err) => {
+  server.listen(config.PORT, config.HOSTNAME, (err) => {
     if (err) {
       server.log.error(err);
       process.exit(1);

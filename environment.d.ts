@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production';
       PORT?: string;
+      HOSTNAME?: string;
       PROJECT_ID: string;
       REDIS_PASS?: string;
       REDIS_HOST?: string;
