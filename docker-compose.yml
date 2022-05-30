@@ -15,21 +15,20 @@ services:
       - REDIS_HOST=redis
     ports:
       - '3001:3001'
-    volumes:
-      - .:/usr/src/node-app
     networks:
       - node-network
+    command: yarn start
 
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #     - '80:80'
-  #   depends_on:
-  #     - node-app
-  #   networks:
-  #     - node-network
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
+    depends_on:
+      - node-app
+    networks:
+      - node-network
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 
 networks:
   node-network:
