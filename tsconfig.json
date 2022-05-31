@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules", "commitlint.config.ts", "**/*.spec.ts"]
+  "exclude": ["node_modules", "commitlint.config.ts", "**/*.spec.ts", "prisma"]
 }
