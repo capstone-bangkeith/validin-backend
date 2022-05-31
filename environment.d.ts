@@ -8,6 +8,7 @@ declare global {
       REDIS_PASS?: string;
       REDIS_HOST?: string;
       CLOUD_STORAGE_CREDS_PATH?: string;
+      DATABASE_URL?: string;
     }
   }
 }

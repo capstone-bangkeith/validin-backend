@@ -9,9 +9,9 @@ datasource db {
 
 model kodewilayah {
   kodewilayah   String  @db.VarChar(20) @id
-  provinsi      String  @db.VarChar(255)
-  kabupatenkota String  @db.VarChar(255)
-  kecamatan     String  @db.VarChar(255)
+  provinsi      String? @db.VarChar(255)
+  kabupatenkota String? @db.VarChar(255)
+  kecamatan     String? @db.VarChar(255)
 }
 
 model ktp {

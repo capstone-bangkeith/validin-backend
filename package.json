@@ -62,5 +62,8 @@
     "sort-package-json": "^1.57.0",
     "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
