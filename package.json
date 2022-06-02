@@ -14,7 +14,7 @@
     "docker:prod:new": "docker compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "format": "prettier -w .",
     "format:check": "prettier -c .",
-    "lint": "eslint ./src --ext .ts",
+    "lint": "eslint . --ext .ts",
     "lint-staged": "lint-staged",
     "lint:package": "sort-package-json",
     "pm2": "pm2",

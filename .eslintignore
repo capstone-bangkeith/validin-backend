@@ -3,3 +3,4 @@ bin
 *.js
 dist
 *.config.ts
+prisma

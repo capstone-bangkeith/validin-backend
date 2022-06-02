@@ -21,7 +21,7 @@ const main = async () => {
   const { stdout, stderr } = await execPromise(cmd);
 
   console.log('stdout:', stdout);
-  console.log('stderr:', stderr);
+  console.error('stderr:', stderr);
 };
 
 main()
