@@ -94,13 +94,32 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     { schema: ktpSchemaPost },
     async (request, reply) => {
       const { data, mimetype } = request.body.ktp[0];
-      await bucket
-        .file(`ktp/${request.body.nik}.${mime.extension(mimetype)}`)
-        .save(data);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { ktp, ...ktpData } = request.body;
-      const ktpRes = await prisma.ktp.create({ data: ktpData });
+
+      const { nik } = ktpData;
+
+      const res = await prisma.kodewilayah.findUnique({
+        where: {
+          kodewilayah: nik.substring(0, 6),
+        },
+      });
+
+      if (res === null) {
+        return reply.send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: 'NIK is not valid!',
+        });
+      }
+
+      const [ktpRes] = await Promise.all([
+        prisma.ktp.create({ data: ktpData }),
+        bucket
+          .file(`ktp/${request.body.nik}.${mime.extension(mimetype)}`)
+          .save(data),
+      ]);
       return reply.send({ data: ktpRes });
     }
   );

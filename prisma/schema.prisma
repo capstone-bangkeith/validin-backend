@@ -19,7 +19,7 @@ model ktp {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   nama              String    @db.VarChar(255)
-  nik               String    @db.VarChar(255)  @unique
+  nik               String    @db.VarChar(50)   @unique
   alamat            String    @db.VarChar(255)
   rt_rw             String    @db.VarChar(255)
   kel_desa          String    @db.VarChar(255)
@@ -28,4 +28,5 @@ model ktp {
   status_perkawinan String    @db.VarChar(50)
   pekerjaan         String    @db.VarChar(50)
   kewarganegaraan   String    @db.VarChar(50)
+  validated         Boolean   @default(false)
 }
