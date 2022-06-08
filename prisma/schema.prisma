@@ -19,6 +19,7 @@ model ktp {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   nama              String    @db.VarChar(255)
+  ttl               String    @db.VarChar(50)
   nik               String    @db.VarChar(50)   @unique
   alamat            String    @db.VarChar(255)
   rt_rw             String    @db.VarChar(255)

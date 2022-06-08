@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import mime from 'mime-types';
 
 import storage from '../config/cloudStorage';
+import { BUCKET_NAME } from '../config/config';
 import prisma from '../config/prismaClient';
 import {
   ktpSchemaGetAll,
@@ -19,6 +20,7 @@ type IQuerystring = {
 type IBody = {
   nama: string;
   nik: string;
+  ttl: string;
   alamat: string;
   rt_rw: string;
   kel_desa: string;
@@ -41,7 +43,7 @@ type IParams = {
 };
 
 export const plugin: FastifyPluginAsync = async (fastify) => {
-  const bucket = storage.bucket('chumybucket');
+  const bucket = storage.bucket(BUCKET_NAME);
 
   fastify.get<{ Querystring: IQuerystring }>(
     '/',
@@ -98,7 +100,19 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { ktp, ...ktpData } = request.body;
 
-      const { nik } = ktpData;
+      const { nik, ttl } = ktpData;
+
+      const date = ttl.split(', ')[1];
+      const dateNoDash = date.replace('-', '');
+
+      if (dateNoDash !== nik.substring(6, 12)) {
+        return reply.send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message:
+            'NIK is not valid!, the Place and Date of birth is not matching',
+        });
+      }
 
       const res = await prisma.kodewilayah.findUnique({
         where: {

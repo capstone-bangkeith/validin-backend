@@ -27,6 +27,7 @@ export const KtpPostType = Type.Object(
     ktp: Type.Any(),
     nama: Type.String({ maxLength: 69, minLength: 2 }),
     nik: Type.RegEx(/^\d{16}$/),
+    ttl: Type.RegEx(/^[A-Z]+, \d{2}-\d{2}-\d{4}$/),
     alamat: Type.String({ maxLength: 50 }),
     rt_rw: Type.String({ maxLength: 50 }),
     kel_desa: Type.String({ maxLength: 50 }),

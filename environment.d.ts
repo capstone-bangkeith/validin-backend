@@ -9,6 +9,7 @@ declare global {
       REDIS_HOST?: string;
       CLOUD_STORAGE_CREDS_PATH?: string;
       DATABASE_URL?: string;
+      BUCKET_NAME: string;
     }
   }
 }
