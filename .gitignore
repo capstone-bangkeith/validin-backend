@@ -131,3 +131,6 @@ dist
 
 # gcp
 cloud_storage_creds.json
+
+# firebase
+serviceAccountKey.json
