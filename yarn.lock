@@ -231,10 +231,10 @@
   dependencies:
     fast-json-stringify "^4.0.0"
 
-"@fastify/helmet@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@fastify/helmet/-/helmet-8.1.0.tgz#33731dc7ac0c228b7676052b1fffb8089c9a571f"
-  integrity sha512-Y6bx95uKd3wYM8UE9sCfveW3nYTkbmOeAgZWqFuBd/FYgJu5SH3uMRM7NhmHFdiiqtzaLvIC6rId47l7783lTg==
+"@fastify/helmet@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@fastify/helmet/-/helmet-9.1.0.tgz#6a87b35c8d03a826ee052e306d2d2c81b49088bc"
+  integrity sha512-wAtu/38t90vH46GdLM6pVi8tM1HZXb6PRdLTNBo9pudSfSw5i5Ogm8Hq1Nx337WjgSOeU6MefaTd+1avlOlCDQ==
   dependencies:
     fastify-plugin "^3.0.0"
     helmet "^5.0.1"
