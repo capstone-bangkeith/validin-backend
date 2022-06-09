@@ -1,4 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
+import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
 import mime from 'mime-types';
 
@@ -36,6 +37,7 @@ type IBody = {
     mimetype: string;
     limit: true;
   }[];
+  token: string;
 };
 
 type IParams = {
@@ -43,7 +45,7 @@ type IParams = {
 };
 
 export const plugin: FastifyPluginAsync = async (fastify) => {
-  const bucket = storage.bucket(BUCKET_NAME);
+  const bucket = storage.bucket(BUCKET_NAME ?? 'chumybucket');
 
   fastify.get<{ Querystring: IQuerystring }>(
     '/',
@@ -95,6 +97,13 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: ktpSchemaPost },
     async (request, reply) => {
+      try {
+        const decodedToken = await getAuth().verifyIdToken(request.body.token);
+        console.log(decodedToken);
+      } catch (e) {
+        console.error(e);
+      }
+
       const { data, mimetype } = request.body.ktp[0];
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -10,8 +10,18 @@ import router from './routes';
 
 const buildApp = async () => {
   const server = fastify({
+    ajv: {
+      customOptions: {
+        strict: 'log',
+        keywords: ['kind', 'modifier'],
+      },
+    },
     logger: {
-      prettyPrint: process.env.NODE_ENV !== 'production',
+      ...(process.env.NODE_ENV !== 'production' && {
+        transport: {
+          target: 'pino-pretty',
+        },
+      }),
     },
   });
 

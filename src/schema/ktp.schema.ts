@@ -36,6 +36,7 @@ export const KtpPostType = Type.Object(
     status_perkawinan: Type.String({ maxLength: 20 }),
     pekerjaan: Type.String({ maxLength: 20 }),
     kewarganegaraan: Type.String({ maxLength: 20 }),
+    token: Type.String(),
   },
   { description: 'KTP properties' }
 );
