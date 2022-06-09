@@ -28,7 +28,7 @@
     "tsc": "tsc --pretty --noEmit --incremental false"
   },
   "dependencies": {
-    "@fastify/helmet": "^8.1.0",
+    "@fastify/helmet": "^9.1.0",
     "@fastify/multipart": "^7.0.0",
     "@fastify/redis": "^6.0.0",
     "@fastify/swagger": "^6.1.0",
