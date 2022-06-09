@@ -38,7 +38,7 @@
     "dotenv": "^16.0.1",
     "fastify": "^4.0.0",
     "fastify-plugin": "^3.0.1",
-    "firebase-admin": "^10.2.0",
+    "firebase-admin": "^10.3.0",
     "http-status": "^1.5.2",
     "mime-types": "^2.1.35",
     "pm2": "^5.2.0",
