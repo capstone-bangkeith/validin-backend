@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { FastifyPluginAsync } from 'fastify';
 import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
 import mime from 'mime-types';
+import sharp from 'sharp';
+import Tesseract from 'tesseract.js';
 
 import storage from '../config/cloudStorage';
 import { BUCKET_NAME } from '../config/config';
 import prisma from '../config/prismaClient';
 import {
+  ktpOcrSchemaPost,
   ktpSchemaGetAll,
   ktpSchemaGetUnique,
   ktpSchemaPost,
@@ -38,6 +42,16 @@ type IBody = {
     limit: true;
   }[];
   token: string;
+};
+
+type IOCRBody = {
+  ktp: {
+    data: Buffer;
+    filename: string;
+    encoding: string;
+    mimetype: string;
+    limit: true;
+  }[];
 };
 
 type IParams = {
@@ -144,6 +158,29 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
           .save(data),
       ]);
       return reply.send({ data: ktpRes });
+    }
+  );
+
+  fastify.post<{ Body: IOCRBody }>(
+    '/ocr',
+    { schema: ktpOcrSchemaPost },
+    async (request, reply) => {
+      const { data, mimetype } = request.body.ktp[0];
+
+      const ktpImg = await sharp(data)
+        .greyscale()
+        .normalise()
+        .sharpen()
+        .threshold()
+        .toBuffer();
+
+      const {
+        data: { text },
+      } = await Tesseract.recognize(ktpImg, 'eng', {
+        logger: (m) => console.log(m),
+      });
+
+      return reply.send({ data: text });
     }
   );
 };

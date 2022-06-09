@@ -134,3 +134,6 @@ cloud_storage_creds.json
 
 # firebase
 serviceAccountKey.json
+
+# tesseract
+*.traineddata
