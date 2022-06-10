@@ -167,16 +167,16 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const { data, mimetype } = request.body.ktp[0];
 
-      const ktpImg = await sharp(data)
+      const processedImg = sharp(data)
+        .resize(1000)
         .greyscale()
-        .normalise()
-        .sharpen()
         .threshold()
-        .toBuffer();
+        .sharpen(3);
+      const ktpImg = await processedImg.toBuffer();
 
       const {
         data: { text },
-      } = await Tesseract.recognize(ktpImg, 'eng', {
+      } = await Tesseract.recognize(ktpImg, 'ind', {
         logger: (m) => console.log(m),
       });
 
