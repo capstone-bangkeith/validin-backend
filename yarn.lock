@@ -214,11 +214,6 @@
   dependencies:
     text-decoding "^1.0.0"
 
-"@fastify/error@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/error/-/error-2.0.0.tgz#a9f94af56eb934f0ab1ce4ef9f0ced6ebf2319dc"
-  integrity sha512-wI3fpfDT0t7p8E6dA2eTECzzOd+bZsZCJ2Hcv+Onn2b7ZwK3RwD27uW2QDaMtQhAfWQQP+WNK7nKf0twLsBf9w==
-
 "@fastify/error@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@fastify/error/-/error-3.0.0.tgz#bfcb7b33cec0196413083a91ef2edc7b2c88455b"
@@ -239,13 +234,13 @@
     fastify-plugin "^3.0.0"
     helmet "^5.0.1"
 
-"@fastify/multipart@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/multipart/-/multipart-7.0.0.tgz#0c312dbcc42354ab39e17d4216be6ef6b977c046"
-  integrity sha512-Ccb/QPcV10Rm55ehrag4fFAiyAXza/WT7j8Cn2mDAJKsn+bU4qi11iVzKy0uFjQ1zP1JMUkcRCCKq6GGvzgBFg==
+"@fastify/multipart@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@fastify/multipart/-/multipart-7.1.0.tgz#baf7ec032e4c849c89ddcdc2365c78fc8a12a661"
+  integrity sha512-EemYz5DLA7zWtelnNeN5Nj3b3zpN98kGv4sT+DvB7rWxoOz1XwhTnb2mnbwp08tEadMTevSmGdjJLc6sreMgyg==
   dependencies:
     "@fastify/busboy" "^1.0.0"
-    "@fastify/error" "^2.0.0"
+    "@fastify/error" "^3.0.0"
     deepmerge "^4.2.2"
     end-of-stream "^1.4.4"
     fastify-plugin "^3.0.0"

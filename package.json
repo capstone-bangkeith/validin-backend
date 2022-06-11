@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@fastify/helmet": "^9.1.0",
-    "@fastify/multipart": "^7.0.0",
+    "@fastify/multipart": "^7.1.0",
     "@fastify/redis": "^6.0.0",
     "@fastify/swagger": "^7.2.0",
     "@google-cloud/storage": "^6.1.0",
