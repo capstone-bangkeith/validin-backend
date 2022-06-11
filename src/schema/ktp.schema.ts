@@ -58,6 +58,7 @@ export const ktpOcrSchemaPost: FastifySchema = {
   description: 'Post KTP OCR',
   body: Type.Object({
     ktp: Type.Any(),
+    uid: Type.String(),
   }),
 };
 

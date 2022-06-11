@@ -2,6 +2,10 @@ import { Spellcheck } from 'natural';
 
 export const corpus = [
   'provinsi',
+  'nik',
+  'lahir',
+  'rtrw',
+  'keldesa',
   'kota',
   'kabupaten',
   'nama',
@@ -11,6 +15,7 @@ export const corpus = [
   'kecamatan',
   'agama',
   'status',
+  'statusperkawinan',
   'perkawinan',
   'pekerjaan',
   'kewarganegaraan',
@@ -35,5 +40,5 @@ export const corpus = [
 export const spellCheck = new Spellcheck(corpus);
 
 export const getCorrections = (word: string) => {
-  return spellCheck.getCorrections(word, 1);
+  return spellCheck.getCorrections(word, 2);
 };

@@ -4,6 +4,7 @@ import fastifyRedis from '@fastify/redis';
 import fastify from 'fastify';
 
 import { REDIS_HOST, REDIS_PASS } from './config/config';
+import { initFirebase } from './config/firebaseAdmin';
 import prisma from './config/prismaClient';
 import { registerSwagger } from './config/swagger';
 import router from './routes';
@@ -46,6 +47,8 @@ const buildApp = async () => {
     .catch((e) => {
       server.log.error(e);
     });
+
+  initFirebase();
 
   return server;
 };

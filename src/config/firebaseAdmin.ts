@@ -1,7 +1,11 @@
-import { applicationDefault, initializeApp } from 'firebase-admin/app';
+import { App, applicationDefault, initializeApp } from 'firebase-admin/app';
 
-export const app = initializeApp({
-  credential: applicationDefault(),
-});
+let firebase: App | undefined = undefined;
 
-export default app;
+export const initFirebase = () => {
+  firebase = initializeApp({
+    credential: applicationDefault(),
+  });
+};
+
+export default firebase;
