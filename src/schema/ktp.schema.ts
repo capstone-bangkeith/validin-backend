@@ -12,6 +12,7 @@ export const KtpType = Type.Object(
     nik: Type.String(),
     alamat: Type.String(),
     rt_rw: Type.String(),
+    jenis_kelamin: Type.String(),
     kel_desa: Type.String(),
     kecamatan: Type.String(),
     agama: Type.String(),
@@ -24,12 +25,13 @@ export const KtpType = Type.Object(
 
 export const KtpPostType = Type.Object(
   {
-    ktp: Type.Any(),
+    uid: Type.String({ maxLength: 50 }),
     nama: Type.String({ maxLength: 69, minLength: 2 }),
     nik: Type.RegEx(/^\d{16}$/),
-    ttl: Type.RegEx(/^[A-Z]+, \d{2}-\d{2}-\d{4}$/),
+    ttl: Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/),
     alamat: Type.String({ maxLength: 50 }),
     rt_rw: Type.String({ maxLength: 50 }),
+    jenis_kelamin: Type.String(),
     kel_desa: Type.String({ maxLength: 50 }),
     kecamatan: Type.String({ maxLength: 50 }),
     agama: Type.String({ maxLength: 20 }),
@@ -80,7 +82,7 @@ export const ktpSchemaGetAll: FastifySchema = {
 export const ktpSchemaGetUnique: FastifySchema = {
   ...ktpSchemaBase,
   params: Type.Object({
-    nik: Type.Optional(
+    uid: Type.Optional(
       Type.String({ description: 'Nomor Induk Kependudukan' })
     ),
   }),

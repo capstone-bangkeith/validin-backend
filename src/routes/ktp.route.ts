@@ -6,8 +6,7 @@ import mime from 'mime-types';
 import sharp from 'sharp';
 import Tesseract from 'tesseract.js';
 
-import storage from '../config/cloudStorage';
-import { BUCKET_NAME } from '../config/config';
+import { bucket } from '../config/cloudStorage';
 import { getCorrections } from '../config/natural';
 import prisma from '../config/prismaClient';
 import {
@@ -27,6 +26,7 @@ type IBody = {
   nama: string;
   nik: string;
   ttl: string;
+  jenis_kelamin: string;
   alamat: string;
   rt_rw: string;
   kel_desa: string;
@@ -35,14 +35,8 @@ type IBody = {
   status_perkawinan: string;
   pekerjaan: string;
   kewarganegaraan: string;
-  ktp: {
-    data: Buffer;
-    filename: string;
-    encoding: string;
-    mimetype: string;
-    limit: true;
-  }[];
   token: string;
+  uid: string;
 };
 
 type IOCRBody = {
@@ -57,12 +51,10 @@ type IOCRBody = {
 };
 
 type IParams = {
-  nik: string;
+  uid: string;
 };
 
 export const plugin: FastifyPluginAsync = async (fastify) => {
-  const bucket = storage.bucket(BUCKET_NAME ?? 'chumybucket');
-
   fastify.get<{ Querystring: IQuerystring }>(
     '/',
     { schema: ktpSchemaGetAll },
@@ -91,11 +83,11 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
   );
 
   fastify.get<{ Params: IParams }>(
-    '/:nik',
+    '/:uid',
     { schema: ktpSchemaGetUnique },
     async (request, reply) => {
       const data = await prisma.ktp.findUnique({
-        where: { nik: request.params.nik },
+        where: { uid: request.params.uid },
       });
 
       if (!data) {
@@ -113,24 +105,39 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: ktpSchemaPost },
     async (request, reply) => {
+      const { token, ...ktpData } = request.body;
+
       try {
-        const decodedToken = await getAuth().verifyIdToken(request.body.token);
+        const decodedToken = await getAuth().verifyIdToken(token);
         console.log(decodedToken);
       } catch (e) {
         console.error(e);
       }
 
-      const { data, mimetype } = request.body.ktp[0];
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { ktp, ...ktpData } = request.body;
-
       const { nik, ttl } = ktpData;
 
       const date = ttl.split(', ')[1];
-      const dateNoDash = date.replace('-', '');
-
-      if (dateNoDash !== nik.substring(6, 12)) {
+      const dateNoDash = date.replaceAll('-', '');
+      const dateToCompare =
+        dateNoDash.substring(0, 4) + dateNoDash.substring(6, 8);
+      const isFemale = +nik.substring(6, 8) >= 40;
+      if (
+        (isFemale && ktpData.jenis_kelamin !== 'PEREMPUAN') ||
+        (!isFemale && ktpData.jenis_kelamin !== 'LAKI-LAKI')
+      ) {
+        return reply.send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: 'NIK is not valid!, the gender is not matching',
+        });
+      }
+      const dateFromNik = isFemale
+        ? (+nik.substring(6, 8) - 40).toString()
+        : nik.substring(6, 8) + nik.substring(8, 12);
+      if (dateToCompare !== dateFromNik) {
+        console.log(dateNoDash);
+        console.log(date);
+        console.log(dateFromNik);
         return reply.send({
           statusCode: 400,
           error: 'Bad Request',
@@ -153,12 +160,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const [ktpRes] = await Promise.all([
-        prisma.ktp.create({ data: ktpData }),
-        bucket
-          .file(`ktp/${request.body.nik}.${mime.extension(mimetype)}`)
-          .save(data),
-      ]);
+      const ktpRes = await prisma.ktp.create({ data: ktpData });
       return reply.send({ data: ktpRes });
     }
   );
@@ -167,6 +169,24 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     '/ocr',
     { schema: ktpOcrSchemaPost },
     async (request, reply) => {
+      const replyBadRequest = (
+        message = 'OCR did not read correct data!',
+        statusCode = 400,
+        error = 'Bad Request'
+      ) =>
+        reply.send({
+          statusCode,
+          error,
+          message,
+        });
+
+      try {
+        await getAuth().getUser(request.body.uid);
+      } catch (e) {
+        console.error(e);
+        return replyBadRequest('User does not exist', 404, 'Not Found');
+      }
+
       const { data, mimetype } = request.body.ktp[0];
 
       const processedImg = sharp(data).resize(1000).greyscale().threshold();
@@ -185,17 +205,6 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const [provinsiRaw, ...provinsiWords] = lines[0].split(' ');
       const provinsiSection = getCorrections(provinsiRaw.toLowerCase())[0];
-
-      const replyBadRequest = (
-        message = 'OCR did not read correct data!',
-        statusCode = 400,
-        error = 'Bad Request'
-      ) =>
-        reply.send({
-          statusCode,
-          error,
-          message,
-        });
 
       if (provinsiSection !== 'provinsi') {
         console.log('provinsi ngab');
@@ -261,7 +270,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         .split(':')[0]
         .split(' ')
         .join('')
-        .replace(/[^a-zA-Z]/, '');
+        .replaceAll(/[^a-zA-Z]/, '');
       const rtrwSection = getCorrections(rtrwRaw.toLowerCase())[0];
 
       if (rtrwSection !== 'rtrw') {
@@ -365,13 +374,6 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       }
 
       const kewarganegaraan = lines[13].split(':')[1].trim().split(' ')[0];
-
-      try {
-        await getAuth().getUser(request.body.uid);
-      } catch (e) {
-        console.error(e);
-        return replyBadRequest('User does not exist', 404, 'Not Found');
-      }
 
       const file = bucket.file(
         `ktp/${request.body.uid}.${mime.extension(mimetype)}`

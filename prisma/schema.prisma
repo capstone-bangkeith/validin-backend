@@ -16,6 +16,7 @@ model kodewilayah {
 
 model ktp {
   id                Int       @id               @default(autoincrement())
+  uid               String    @db.VarChar(50)   @unique
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   nama              String    @db.VarChar(255)
@@ -24,6 +25,7 @@ model ktp {
   alamat            String    @db.VarChar(255)
   rt_rw             String    @db.VarChar(255)
   kel_desa          String    @db.VarChar(255)
+  jenis_kelamin     String    @db.VarChar(20)
   kecamatan         String    @db.VarChar(255)
   agama             String    @db.VarChar(50)
   status_perkawinan String    @db.VarChar(50)
