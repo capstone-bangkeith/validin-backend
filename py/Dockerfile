@@ -1,4 +1,4 @@
-FROM python:alpine as builder
+FROM python:bullseye
 
 WORKDIR /code
 
