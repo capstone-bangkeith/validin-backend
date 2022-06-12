@@ -39,6 +39,10 @@ const buildApp = async () => {
 
   await server.register(router);
 
+  server.get('/', async () => {
+    return { hello: 'bangkit academy' };
+  });
+
   prisma
     .$connect()
     .then(() => {

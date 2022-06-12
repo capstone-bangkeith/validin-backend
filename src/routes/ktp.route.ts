@@ -138,8 +138,8 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         console.log(dateNoDash);
         console.log(date);
         console.log(dateFromNik);
-        return reply.send({
-          statusCode: 400,
+        return reply.status(httpStatus.BAD_REQUEST).send({
+          statusCode: httpStatus.BAD_REQUEST,
           error: 'Bad Request',
           message:
             'NIK is not valid!, the Place and Date of birth is not matching',
@@ -153,8 +153,8 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       });
 
       if (res === null) {
-        return reply.send({
-          statusCode: 400,
+        return reply.status(httpStatus.BAD_REQUEST).send({
+          statusCode: httpStatus.BAD_REQUEST,
           error: 'Bad Request',
           message: 'NIK is not valid!',
         });
@@ -171,10 +171,10 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const replyBadRequest = (
         message = 'OCR did not read correct data!',
-        statusCode = 400,
+        statusCode = httpStatus.BAD_REQUEST,
         error = 'Bad Request'
       ) =>
-        reply.send({
+        reply.status(statusCode).send({
           statusCode,
           error,
           message,
