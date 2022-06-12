@@ -152,7 +152,6 @@ nspektr==0.4.0
 numpy==1.22.3
 opencv-contrib-python==4.5.5.64
 opencv-python==4.5.5.64
-opencv-python-headless==4.6.0.66
 optimus-manager==1.4
 ordered-set==4.1.0
 packaging==21.3
