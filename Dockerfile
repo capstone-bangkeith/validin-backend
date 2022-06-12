@@ -2,11 +2,9 @@ FROM node:lts as builder
 
 WORKDIR /code
 
-COPY package.json yarn.lock prisma ./
+COPY . .
 
 RUN yarn install --pure-lockfile --production=false
-
-COPY . .
 
 RUN yarn build
 
