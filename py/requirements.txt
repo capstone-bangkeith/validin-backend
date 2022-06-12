@@ -6,7 +6,7 @@ alembic==1.7.7
 anyio==3.5.0
 appdirs==1.4.4
 APScheduler==3.9.1
-arandr
+arandr==0.1.10
 aredis==1.1.8
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
