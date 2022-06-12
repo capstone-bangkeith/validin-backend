@@ -270,7 +270,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         .split(':')[0]
         .split(' ')
         .join('')
-        .replaceAll(/[^a-zA-Z]/, '');
+        .replace(/[^a-zA-Z]/, '');
       const rtrwSection = getCorrections(rtrwRaw.toLowerCase())[0];
 
       if (rtrwSection !== 'rtrw') {
