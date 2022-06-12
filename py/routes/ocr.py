@@ -1,7 +1,7 @@
 from typing import List
 
-from py.schemas import OCROut
-from py.vision import predictor
+from schemas import OCROut
+from vision import predictor
 from fastapi import APIRouter, File, UploadFile, status
 
 from doctr.io import decode_img_as_tensor

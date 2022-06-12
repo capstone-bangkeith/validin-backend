@@ -1,5 +1,5 @@
-from py.schemas import RecognitionOut
-from py.vision import reco_predictor
+from schemas import RecognitionOut
+from vision import reco_predictor
 from fastapi import APIRouter, File, UploadFile, status
 
 from doctr.io import decode_img_as_tensor

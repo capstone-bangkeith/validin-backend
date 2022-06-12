@@ -1,7 +1,7 @@
 from typing import List
 
-from py.schemas import DetectionOut
-from py.vision import det_predictor
+from schemas import DetectionOut
+from vision import det_predictor
 from fastapi import APIRouter, File, UploadFile, status
 
 from doctr.io import decode_img_as_tensor

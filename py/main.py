@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from py.routes import detection, ocr, recognition
+from routes import detection, ocr, recognition
 
 app = FastAPI(title="Validin Backend Snek")
 
