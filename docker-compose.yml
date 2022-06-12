@@ -22,7 +22,8 @@ services:
     image: python-app
     ports:
       - '8000:8000'
-    networks: -node-network
+    networks:
+      - node-network
 
   nginx:
     image: nginx:stable-alpine
