@@ -433,6 +433,15 @@
     teeny-request "^8.0.0"
     uuid "^8.0.0"
 
+"@google-cloud/vision@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@google-cloud/vision/-/vision-2.4.2.tgz#b8552c08eac0d28b5fda561591e851fd3d04a028"
+  integrity sha512-2IazcBR9K0JJtFJWVXq0Ko3VQtcHG1/xAaxpfJ550aSK7gGq6o4gmDt+z6J61qWYlcE9w7Wb3b+lH6YzqF/HgQ==
+  dependencies:
+    "@google-cloud/promisify" "^2.0.0"
+    google-gax "^2.24.1"
+    is "^3.3.0"
+
 "@grpc/grpc-js@~1.6.0":
   version "1.6.7"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.6.7.tgz#4c4fa998ff719fe859ac19fe977fdef097bb99aa"
@@ -3017,6 +3026,11 @@ is-yarn-global@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/is-yarn-global/-/is-yarn-global-0.3.0.tgz#d502d3382590ea3004893746754c89139973e232"
   integrity sha512-VjSeb/lHmkoyd8ryPVIKvOCn4D1koMqY+vqyjjUfc3xyKtP4dYOxM44sZrnqQSzSds3xyOrUTLTC9LVCVgLngw==
+
+is@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/is/-/is-3.3.0.tgz#61cff6dd3c4193db94a3d62582072b44e5645d79"
+  integrity sha512-nW24QBoPcFGGHJGUwnfpI7Yc5CdqWNdsyHQszVE/z2pKHXzh7FZ5GWhJqSyaQ9wMkQnsTx+kAI8bHlCX4tKdbg==
 
 isarray@0.0.1:
   version "0.0.1"

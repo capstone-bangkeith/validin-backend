@@ -3,10 +3,11 @@ import type { FastifyPluginAsync } from 'fastify';
 import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
 import mime from 'mime-types';
-import sharp from 'sharp';
+import sharp, { Sharp } from 'sharp';
 import Tesseract from 'tesseract.js';
 
 import { bucket } from '../config/cloudStorage';
+import { textDetectionGcs } from '../config/cloudVision';
 import { getCorrections } from '../config/natural';
 import prisma from '../config/prismaClient';
 import {
@@ -105,7 +106,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: ktpSchemaPost },
     async (request, reply) => {
-      const { token, ...ktpData } = request.body;
+      const { token, ...ktpData }: IBody = request.body;
 
       try {
         const decodedToken = await getAuth().verifyIdToken(token);
@@ -189,7 +190,10 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const { data, mimetype } = request.body.ktp[0];
 
-      const processedImg = sharp(data).resize(1000).greyscale().threshold();
+      const processedImg: Sharp = sharp(data)
+        .resize(1000)
+        .greyscale()
+        .threshold();
 
       const ktpImg = await processedImg.toBuffer();
 
@@ -385,6 +389,101 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         data: {
           ktp: {
             nik,
+            provinsi,
+            nama,
+            ttl,
+            jenisKelamin,
+            alamat,
+            rtrw,
+            keldesa,
+            kecamatan,
+            agama,
+            statusPerkawinan,
+            pekerjaan,
+            kewarganegaraan,
+          },
+          publicUrl,
+        },
+      });
+    }
+  );
+
+  fastify.post<{ Body: IOCRBody }>(
+    '/ocr2',
+    { schema: ktpOcrSchemaPost },
+    async (request, reply) => {
+      const replyBadRequest = (
+        message = 'OCR did not read correct data!',
+        statusCode = httpStatus.BAD_REQUEST,
+        error = 'Bad Request'
+      ) =>
+        reply.status(statusCode).send({
+          statusCode,
+          error,
+          message,
+        });
+
+      try {
+        await getAuth().getUser(request.body.uid);
+      } catch (e) {
+        console.error(e);
+        return replyBadRequest('User does not exist', 404, 'Not Found');
+      }
+
+      const { data, mimetype } = request.body.ktp[0];
+
+      const processedImg: Sharp = sharp(data).resize(1000);
+
+      const ktpImg = await processedImg.toBuffer();
+      const filename = `ktp/${request.body.uid}.${mime.extension(mimetype)}`;
+      const file = bucket.file(filename);
+      await file.save(ktpImg);
+      const publicUrl = file.publicUrl();
+
+      const [result] = await textDetectionGcs(filename);
+      const detections = result.textAnnotations;
+      if (!detections?.[0].description) {
+        return replyBadRequest('Could not detect any texts from the image');
+      }
+
+      const lines = detections[0].description.split('\n');
+
+      let i = 0;
+      for (; i < lines.length; ++i) {
+        if (lines[i].toLowerCase().includes('provinsi')) {
+          break;
+        }
+      }
+      lines.splice(0, i);
+      const filterRegex =
+        /gol\. darah|nik|kewarganegaraan|nama|status perkawinan|berlaku hingga|alamat|agama|tempat\/tgl lahir|jenis kelamin|gol darah|rt\/rw|kel|desa|kecamatan|pekerjaan|kel\/desa|desa|kel\/|\/desa/gi;
+
+      const cleanLines = lines
+        .map((line) => line.replace(filterRegex, '').replace(':', '').trim())
+        .filter((line) => line != '');
+
+      const [
+        provinsi,
+        kota,
+        nik,
+        nama,
+        ttl,
+        jenisKelamin,
+        alamat,
+        rtrw,
+        keldesa,
+        kecamatan,
+        agama,
+        statusPerkawinan,
+        pekerjaan,
+        kewarganegaraan,
+      ] = cleanLines;
+
+      return reply.send({
+        data: {
+          ktp: {
+            nik: nik.match(/[0-9]{16}/)?.[0] ?? nik,
+            kota,
             provinsi,
             nama,
             ttl,
