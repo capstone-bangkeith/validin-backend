@@ -6,6 +6,7 @@ import { ErrorResponse } from './error.schema';
 export const KtpType = Type.Object(
   {
     id: Type.Number(),
+    uid: Type.String(),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
     nama: Type.String(),
@@ -25,7 +26,6 @@ export const KtpType = Type.Object(
 
 export const KtpPostType = Type.Object(
   {
-    uid: Type.String({ maxLength: 50 }),
     nama: Type.String({ maxLength: 69, minLength: 2 }),
     nik: Type.RegEx(/^\d{16}$/),
     ttl: Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/),
@@ -38,7 +38,6 @@ export const KtpPostType = Type.Object(
     status_perkawinan: Type.String({ maxLength: 20 }),
     pekerjaan: Type.String({ maxLength: 20 }),
     kewarganegaraan: Type.String({ maxLength: 20 }),
-    token: Type.String(),
   },
   { description: 'KTP properties' }
 );
@@ -46,6 +45,24 @@ export const KtpPostType = Type.Object(
 const PostKtpResponse = Type.Object({
   data: KtpPostType,
 });
+
+export const KtpPutType = Type.Object(
+  {
+    nama: Type.Optional(Type.String({ maxLength: 69, minLength: 2 })),
+    nik: Type.Optional(Type.RegEx(/^\d{16}$/)),
+    ttl: Type.Optional(Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/)),
+    alamat: Type.Optional(Type.String({ maxLength: 50 })),
+    rt_rw: Type.Optional(Type.String({ maxLength: 50 })),
+    jenis_kelamin: Type.Optional(Type.String()),
+    kel_desa: Type.Optional(Type.String({ maxLength: 50 })),
+    kecamatan: Type.Optional(Type.String({ maxLength: 50 })),
+    agama: Type.Optional(Type.String({ maxLength: 20 })),
+    status_perkawinan: Type.Optional(Type.String({ maxLength: 20 })),
+    pekerjaan: Type.Optional(Type.String({ maxLength: 20 })),
+    kewarganegaraan: Type.Optional(Type.String({ maxLength: 20 })),
+  },
+  { description: 'KTP properties' }
+);
 
 const ktpSchemaBase: FastifySchema = {
   description: 'Post KTP form',
@@ -60,7 +77,6 @@ export const ktpOcrSchemaPost: FastifySchema = {
   description: 'Post KTP OCR',
   body: Type.Object({
     ktp: Type.Any(),
-    uid: Type.String(),
   }),
 };
 
@@ -86,6 +102,27 @@ export const ktpSchemaGetUnique: FastifySchema = {
       Type.String({ description: 'Nomor Induk Kependudukan' })
     ),
   }),
+  response: {
+    200: Type.Object({
+      data: KtpType,
+    }),
+    404: ErrorResponse,
+  },
+};
+
+export const ktpSchemaPut: FastifySchema = {
+  description: 'Update ktp',
+  body: KtpPutType,
+  response: {
+    200: Type.Object({
+      data: KtpType,
+    }),
+    404: ErrorResponse,
+  },
+};
+
+export const ktpSchemaDelete: FastifySchema = {
+  description: 'Delete ktp',
   response: {
     200: Type.Object({
       data: KtpType,

@@ -12,18 +12,19 @@ import { getCorrections } from '../config/natural';
 import prisma from '../config/prismaClient';
 import {
   ktpOcrSchemaPost,
-  ktpSchemaGetAll,
+  ktpSchemaDelete,
   ktpSchemaGetUnique,
   ktpSchemaPost,
+  ktpSchemaPut,
 } from '../schema/ktp.schema';
 
-type IQuerystring = {
+export type IQuerystring = {
   nik?: string;
   limit?: number;
   page?: number;
 };
 
-type IBody = {
+export type IBody = {
   nama: string;
   nik: string;
   ttl: string;
@@ -36,11 +37,9 @@ type IBody = {
   status_perkawinan: string;
   pekerjaan: string;
   kewarganegaraan: string;
-  token: string;
-  uid: string;
 };
 
-type IOCRBody = {
+export type IOCRBody = {
   ktp: {
     data: Buffer;
     filename: string;
@@ -48,47 +47,24 @@ type IOCRBody = {
     mimetype: string;
     limit: true;
   }[];
-  uid: string;
 };
 
-type IParams = {
-  uid: string;
+export type IHeaders = {
+  token: string;
 };
 
 export const plugin: FastifyPluginAsync = async (fastify) => {
-  fastify.get<{ Querystring: IQuerystring }>(
+  fastify.get<{ Headers: IHeaders }>(
     '/',
-    { schema: ktpSchemaGetAll },
-    async (request, reply) => {
-      const limit = request.query.limit ?? 10;
-      const page = request.query.page ?? 1;
-
-      const data = request.query.nik
-        ? await prisma.ktp.findMany({
-            where: { nik: request.query.nik },
-          })
-        : await prisma.ktp.findMany({
-            skip: (page - 1) * limit,
-            take: limit,
-          });
-
-      if (!data) {
-        return reply.status(httpStatus.NOT_FOUND).send({
-          error: httpStatus[httpStatus.NOT_FOUND],
-          statusCode: httpStatus.NOT_FOUND,
-          message: 'KTP not found',
-        });
-      }
-      return reply.send({ data });
-    }
-  );
-
-  fastify.get<{ Params: IParams }>(
-    '/:uid',
     { schema: ktpSchemaGetUnique },
     async (request, reply) => {
+      const { token } = request.headers;
+
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
+
       const data = await prisma.ktp.findUnique({
-        where: { uid: request.params.uid },
+        where: { uid },
       });
 
       if (!data) {
@@ -102,18 +78,15 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     }
   );
 
-  fastify.post<{ Body: IBody }>(
+  fastify.post<{ Body: IBody; Headers: IHeaders }>(
     '/',
     { schema: ktpSchemaPost },
     async (request, reply) => {
-      const { token, ...ktpData }: IBody = request.body;
+      const ktpData: IBody = request.body;
+      const { token } = request.headers;
 
-      try {
-        const decodedToken = await getAuth().verifyIdToken(token);
-        console.log(decodedToken);
-      } catch (e) {
-        console.error(e);
-      }
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
 
       const { nik, ttl } = ktpData;
 
@@ -161,12 +134,68 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const ktpRes = await prisma.ktp.create({ data: ktpData });
+      const ktpRes = await prisma.ktp.upsert({
+        where: {
+          uid,
+        },
+        update: ktpData,
+        create: { ...ktpData, uid },
+      });
       return reply.send({ data: ktpRes });
     }
   );
 
-  fastify.post<{ Body: IOCRBody }>(
+  fastify.put<{ Body: IBody; Headers: IHeaders }>(
+    '/',
+    { schema: ktpSchemaPut },
+    async (request, reply) => {
+      const ktp = request.body;
+      const { token } = request.headers;
+
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
+
+      const data = await prisma.ktp.update({
+        where: { uid },
+        data: ktp,
+      });
+
+      if (!data) {
+        return reply.status(httpStatus.NOT_FOUND).send({
+          error: httpStatus[httpStatus.NOT_FOUND],
+          statusCode: httpStatus.NOT_FOUND,
+          message: 'KTP not found',
+        });
+      }
+      return reply.send({ data });
+    }
+  );
+
+  fastify.delete<{ Headers: IHeaders }>(
+    '/',
+    { schema: ktpSchemaDelete },
+    async (request, reply) => {
+      const { token } = request.headers;
+
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
+
+      const data = await prisma.ktp.delete({
+        where: { uid },
+      });
+
+      if (!data) {
+        return reply.status(httpStatus.NOT_FOUND).send({
+          error: httpStatus[httpStatus.NOT_FOUND],
+          statusCode: httpStatus.NOT_FOUND,
+          message: 'KTP not found',
+        });
+      }
+      return reply.send({ data });
+    }
+  );
+
+  fastify.post<{ Body: IOCRBody; Headers: IHeaders }>(
     '/ocr',
     { schema: ktpOcrSchemaPost },
     async (request, reply) => {
@@ -181,12 +210,10 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
           message,
         });
 
-      try {
-        await getAuth().getUser(request.body.uid);
-      } catch (e) {
-        console.error(e);
-        return replyBadRequest('User does not exist', 404, 'Not Found');
-      }
+      const { token } = request.headers;
+
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
 
       const { data, mimetype } = request.body.ktp[0];
 
@@ -379,9 +406,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const kewarganegaraan = lines[13].split(':')[1].trim().split(' ')[0];
 
-      const file = bucket.file(
-        `ktp/${request.body.uid}.${mime.extension(mimetype)}`
-      );
+      const file = bucket.file(`ktp/${uid}.${mime.extension(mimetype)}`);
       await file.save(data);
       const publicUrl = file.publicUrl();
 
@@ -408,7 +433,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     }
   );
 
-  fastify.post<{ Body: IOCRBody }>(
+  fastify.post<{ Body: IOCRBody; Headers: IHeaders }>(
     '/ocr2',
     { schema: ktpOcrSchemaPost },
     async (request, reply) => {
@@ -423,19 +448,17 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
           message,
         });
 
-      try {
-        await getAuth().getUser(request.body.uid);
-      } catch (e) {
-        console.error(e);
-        return replyBadRequest('User does not exist', 404, 'Not Found');
-      }
+      const { token } = request.headers;
+
+      const decodedIdToken = await getAuth().verifyIdToken(token);
+      const { uid } = decodedIdToken;
 
       const { data, mimetype } = request.body.ktp[0];
 
       const processedImg: Sharp = sharp(data).resize(1000);
 
       const ktpImg = await processedImg.toBuffer();
-      const filename = `ktp/${request.body.uid}.${mime.extension(mimetype)}`;
+      const filename = `ktp/${uid}.${mime.extension(mimetype)}`;
       const file = bucket.file(filename);
       await file.save(ktpImg);
       const publicUrl = file.publicUrl();
@@ -468,36 +491,51 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         nik,
         nama,
         ttl,
-        jenisKelamin,
+        jenis_kelamin,
         alamat,
-        rtrw,
-        keldesa,
+        rt_rw,
+        kel_desa,
         kecamatan,
         agama,
-        statusPerkawinan,
+        status_perkawinan,
         pekerjaan,
         kewarganegaraan,
       ] = cleanLines;
 
+      const ktp = {
+        nik: nik.match(/[0-9]{16}/)?.[0] ?? nik,
+        nama,
+        ttl,
+        jenis_kelamin,
+        alamat,
+        rt_rw,
+        kel_desa,
+        kecamatan,
+        agama,
+        status_perkawinan,
+        pekerjaan,
+        kewarganegaraan,
+      };
+
+      const user = await prisma.ktp.upsert({
+        where: {
+          uid,
+        },
+        update: {
+          ktpUrl: publicUrl,
+          ...ktp,
+        },
+        create: {
+          uid,
+          ktpUrl: publicUrl,
+          ...ktp,
+        },
+      });
+
       return reply.send({
         data: {
-          ktp: {
-            nik: nik.match(/[0-9]{16}/)?.[0] ?? nik,
-            kota,
-            provinsi,
-            nama,
-            ttl,
-            jenisKelamin,
-            alamat,
-            rtrw,
-            keldesa,
-            kecamatan,
-            agama,
-            statusPerkawinan,
-            pekerjaan,
-            kewarganegaraan,
-          },
-          publicUrl,
+          ktp: { ...ktp, kota, provinsi },
+          user,
         },
       });
     }

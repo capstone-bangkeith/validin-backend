@@ -19,17 +19,18 @@ model ktp {
   uid               String    @db.VarChar(50)   @unique
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  nama              String    @db.VarChar(255)
-  ttl               String    @db.VarChar(50)
-  nik               String    @db.VarChar(50)   @unique
-  alamat            String    @db.VarChar(255)
-  rt_rw             String    @db.VarChar(255)
-  kel_desa          String    @db.VarChar(255)
-  jenis_kelamin     String    @db.VarChar(20)
-  kecamatan         String    @db.VarChar(255)
-  agama             String    @db.VarChar(50)
-  status_perkawinan String    @db.VarChar(50)
-  pekerjaan         String    @db.VarChar(50)
-  kewarganegaraan   String    @db.VarChar(50)
+  nama              String?   @db.VarChar(255)
+  ttl               String?   @db.VarChar(50)
+  nik               String?   @db.VarChar(50)   @unique
+  alamat            String?   @db.VarChar(255)
+  ktpUrl            String?   @db.VarChar(255)
+  rt_rw             String?   @db.VarChar(255)
+  kel_desa          String?   @db.VarChar(255)
+  jenis_kelamin     String?   @db.VarChar(20)
+  kecamatan         String?   @db.VarChar(255)
+  agama             String?   @db.VarChar(50)
+  status_perkawinan String?   @db.VarChar(50)
+  pekerjaan         String?   @db.VarChar(50)
+  kewarganegaraan   String?   @db.VarChar(50)
   validated         Boolean   @default(false)
 }
