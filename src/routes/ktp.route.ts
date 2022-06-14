@@ -18,6 +18,7 @@ import {
   ktpSchemaPost,
   ktpSchemaPut,
 } from '../schema/ktp.schema';
+import normalizeCoord from '../utils/normalizeCoord';
 
 export type IQuerystring = {
   nik?: string;
@@ -469,17 +470,35 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const { left, top, right, bottom } = request.body;
 
+      const image = sharp(data);
+      const metadata = await image.metadata();
+      const { width, height } = metadata;
+
       const processedImg: Sharp =
         left !== undefined &&
         top !== undefined &&
         right !== undefined &&
-        bottom !== undefined
+        bottom !== undefined &&
+        width !== undefined &&
+        height !== undefined
           ? sharp(data)
               .extract({
-                left: Math.round(Math.min(+left, +right)),
-                top: Math.round(Math.min(+bottom, +top)),
-                width: Math.round(Math.abs(+right - +left)),
-                height: Math.round(Math.abs(+bottom - +top)),
+                left: Math.min(
+                  normalizeCoord(left, 320, width),
+                  normalizeCoord(right, 320, width)
+                ),
+                top: Math.min(
+                  normalizeCoord(bottom, 320, height),
+                  normalizeCoord(top, 320, height)
+                ),
+                width: Math.abs(
+                  normalizeCoord(right, 320, width) -
+                    normalizeCoord(left, 320, width)
+                ),
+                height: Math.abs(
+                  normalizeCoord(bottom, 320, height) -
+                    normalizeCoord(top, 320, height)
+                ),
               })
               .resize(1000)
           : sharp(data).resize(1000);
@@ -537,6 +556,8 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         kewarganegaraan,
       ] = cleanLines;
 
+      const tanggal_lahir = ttl.split(', ')[1];
+
       const ktp = {
         provinsi,
         kota,
@@ -571,7 +592,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       return reply.send({
         data: {
-          ktp,
+          ktp: { ...ktp, tanggal_lahir },
           user,
         },
       });
