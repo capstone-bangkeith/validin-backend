@@ -557,6 +557,12 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       }
       cleanLines.splice(7, i - 7);
 
+      if (cleanLines.length < 14) {
+        return replyBadRequest(
+          'Some fields are not detected! Make sure the image was not cropped'
+        );
+      }
+
       const [
         provinsi,
         kota,
