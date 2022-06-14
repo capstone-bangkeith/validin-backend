@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { google } from '@google-cloud/vision/build/protos/protos';
 import type { FastifyPluginAsync } from 'fastify';
 import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
@@ -489,9 +490,17 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       await file.save(ktpImg);
       const publicUrl = file.publicUrl();
 
-      const [result] = await textDetectionGcs(filename);
+      let result: google.cloud.vision.v1.IAnnotateImageResponse;
+      try {
+        [result] = await textDetectionGcs(filename);
+      } catch (e) {
+        return replyBadRequest(
+          (e as string) ?? 'Could not detect any texts from the image'
+        );
+      }
       const detections = result.textAnnotations;
-      if (!detections?.[0].description) {
+
+      if (!detections?.[0]?.description) {
         return replyBadRequest('Could not detect any texts from the image');
       }
 
