@@ -511,7 +511,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       let result: google.cloud.vision.v1.IAnnotateImageResponse;
       try {
-        [result] = await textDetectionGcs(filename);
+        [result] = await textDetectionGcs(filename, data);
       } catch (e) {
         return replyBadRequest(
           (e as string) ?? 'Could not detect any texts from the image'
