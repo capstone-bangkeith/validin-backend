@@ -539,6 +539,24 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         .map((line) => line.replace(filterRegex, '').replace(':', '').trim())
         .filter((line) => line != '');
 
+      i = 4;
+      while (
+        i < cleanLines.length &&
+        !cleanLines[i].match(/[a-z -]+, ?\d{2}-\d{2}-\d{4}/i)
+      ) {
+        cleanLines[3] += ` ${cleanLines[i++]}`;
+      }
+      cleanLines.splice(4, i - 4);
+
+      i = 7;
+      while (
+        i < cleanLines.length &&
+        !cleanLines[i].match(/[0-9]{3}\/[0-9]{3}/)
+      ) {
+        cleanLines[6] += ` ${cleanLines[i++]}`;
+      }
+      cleanLines.splice(7, i - 7);
+
       const [
         provinsi,
         kota,
