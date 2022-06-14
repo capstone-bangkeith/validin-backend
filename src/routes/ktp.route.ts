@@ -27,6 +27,8 @@ export type IQuerystring = {
 export type IBody = {
   nama: string;
   nik: string;
+  kota: string;
+  provinsi: string;
   ttl: string;
   jenis_kelamin: string;
   alamat: string;
@@ -39,6 +41,11 @@ export type IBody = {
   kewarganegaraan: string;
 };
 
+type Coordinate = {
+  x: number;
+  y: number;
+};
+
 export type IOCRBody = {
   ktp: {
     data: Buffer;
@@ -47,6 +54,10 @@ export type IOCRBody = {
     mimetype: string;
     limit: true;
   }[];
+  left?: number;
+  top?: number;
+  right?: number;
+  bottom?: number;
 };
 
 export type IHeaders = {
@@ -455,7 +466,22 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const { data, mimetype } = request.body.ktp[0];
 
-      const processedImg: Sharp = sharp(data).resize(1000);
+      const { left, top, right, bottom } = request.body;
+
+      const processedImg: Sharp =
+        left !== undefined &&
+        top !== undefined &&
+        right !== undefined &&
+        bottom !== undefined
+          ? sharp(data)
+              .extract({
+                left: Math.round(Math.min(+left, +right)),
+                top: Math.round(Math.min(+bottom, +top)),
+                width: Math.round(Math.abs(+right - +left)),
+                height: Math.round(Math.abs(+bottom - +top)),
+              })
+              .resize(1000)
+          : sharp(data).resize(1000);
 
       const ktpImg = await processedImg.toBuffer();
       const filename = `ktp/${uid}.${mime.extension(mimetype)}`;
@@ -503,6 +529,8 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       ] = cleanLines;
 
       const ktp = {
+        provinsi,
+        kota,
         nik: nik.match(/[0-9]{16}/)?.[0] ?? nik,
         nama,
         ttl,

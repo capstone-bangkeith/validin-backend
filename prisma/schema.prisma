@@ -19,6 +19,8 @@ model ktp {
   uid               String    @db.VarChar(50)   @unique
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+  provinsi          String?   @db.VarChar(255)
+  kota              String?   @db.VarChar(255)
   nama              String?   @db.VarChar(255)
   ttl               String?   @db.VarChar(50)
   nik               String?   @db.VarChar(50)   @unique

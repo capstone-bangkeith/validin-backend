@@ -11,6 +11,8 @@ export const KtpType = Type.Object(
     updatedAt: Type.String({ format: 'date-time' }),
     nama: Type.String(),
     nik: Type.String(),
+    kota: Type.String(),
+    provinsi: Type.String(),
     alamat: Type.String(),
     rt_rw: Type.String(),
     jenis_kelamin: Type.String(),
@@ -27,6 +29,8 @@ export const KtpType = Type.Object(
 export const KtpPostType = Type.Object(
   {
     nama: Type.String({ maxLength: 69, minLength: 2 }),
+    provinsi: Type.String({ maxLength: 69, minLength: 2 }),
+    kota: Type.String({ maxLength: 69, minLength: 2 }),
     nik: Type.RegEx(/^\d{16}$/),
     ttl: Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/),
     alamat: Type.String({ maxLength: 50 }),
@@ -49,6 +53,8 @@ const PostKtpResponse = Type.Object({
 export const KtpPutType = Type.Object(
   {
     nama: Type.Optional(Type.String({ maxLength: 69, minLength: 2 })),
+    provinsi: Type.Optional(Type.String({ maxLength: 69, minLength: 2 })),
+    kota: Type.Optional(Type.String({ maxLength: 69, minLength: 2 })),
     nik: Type.Optional(Type.RegEx(/^\d{16}$/)),
     ttl: Type.Optional(Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/)),
     alamat: Type.Optional(Type.String({ maxLength: 50 })),
