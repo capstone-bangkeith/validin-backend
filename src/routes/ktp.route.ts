@@ -491,22 +491,10 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
           ? sharp(data)
               .rotate(90 * rotateTimes)
               .extract({
-                left: Math.min(
-                  normalizeCoord(left, 320, width),
-                  normalizeCoord(right, 320, width)
-                ),
-                top: Math.min(
-                  normalizeCoord(bottom, 320, height),
-                  normalizeCoord(top, 320, height)
-                ),
-                width: Math.abs(
-                  normalizeCoord(right, 320, width) -
-                    normalizeCoord(left, 320, width)
-                ),
-                height: Math.abs(
-                  normalizeCoord(bottom, 320, height) -
-                    normalizeCoord(top, 320, height)
-                ),
+                left: Math.min(normalizeCoord(left), normalizeCoord(right)),
+                top: Math.min(normalizeCoord(bottom), normalizeCoord(top)),
+                width: Math.abs(normalizeCoord(right) - normalizeCoord(left)),
+                height: Math.abs(normalizeCoord(bottom) - normalizeCoord(top)),
               })
               .resize(1000)
           : sharp(data)
