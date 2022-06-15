@@ -476,9 +476,11 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
 
       const image = sharp(data);
       const metadata = await image.metadata();
-      const { width, height } = metadata;
+      let { width, height } = metadata;
       const rotateTimes = request.query.rotate ?? 0;
-
+      if (rotateTimes % 2 == 1) {
+        [height, width] = [width, height];
+      }
       const processedImg: Sharp =
         left !== undefined &&
         top !== undefined &&
