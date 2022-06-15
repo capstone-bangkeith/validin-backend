@@ -488,28 +488,36 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         bottom !== undefined &&
         width !== undefined &&
         height !== undefined
-          ? sharp(data)
+          ? image
               .rotate(90 * rotateTimes)
               .extract({
-                left: Math.min(normalizeCoord(left), normalizeCoord(right)),
-                top: Math.min(normalizeCoord(bottom), normalizeCoord(top)),
-                width: Math.abs(normalizeCoord(right) - normalizeCoord(left)),
-                height: Math.abs(normalizeCoord(bottom) - normalizeCoord(top)),
+                left: Math.min(
+                  normalizeCoord(left, 3),
+                  normalizeCoord(right, 3)
+                ),
+                top: Math.min(
+                  normalizeCoord(bottom, 3),
+                  normalizeCoord(top, 3)
+                ),
+                width: Math.abs(
+                  normalizeCoord(right, 3) - normalizeCoord(left, 3)
+                ),
+                height: Math.abs(
+                  normalizeCoord(bottom, 3) - normalizeCoord(top, 3)
+                ),
               })
               .resize(1000)
-          : sharp(data)
-              .rotate(90 * rotateTimes)
-              .resize(1000);
+          : image.rotate(90 * rotateTimes).resize(1000);
 
-      const ktpImg = await processedImg.toBuffer();
-      const filename = `ktp/${uid}.${mime.extension(mimetype)}`;
+      const ktpImg = await processedImg.withMetadata().toBuffer();
+      const filename = `ktp/${uid}${Math.random()}.${mime.extension(mimetype)}`;
       const file = bucket.file(filename);
       await file.save(ktpImg);
       const publicUrl = file.publicUrl();
 
       let result: google.cloud.vision.v1.IAnnotateImageResponse;
       try {
-        [result] = await textDetectionGcs(filename, data);
+        [result] = await textDetectionGcs(filename, ktpImg);
       } catch (e) {
         return replyBadRequest(
           (e as string) ?? 'Could not detect any texts from the image'

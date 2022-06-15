@@ -1,5 +1,5 @@
-export const normalizeCoord = (coord: number | string) => {
-  return Math.round(+coord * 3);
+export const normalizeCoord = (coord: number | string, multiplier = 3) => {
+  return Math.round(+coord * multiplier);
 };
 
 export default normalizeCoord;
