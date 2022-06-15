@@ -26,6 +26,10 @@ export type IQuerystring = {
   page?: number;
 };
 
+export type IQueryOcr = {
+  rotate?: number;
+};
+
 export type IBody = {
   nama: string;
   nik: string;
@@ -446,7 +450,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
     }
   );
 
-  fastify.post<{ Body: IOCRBody; Headers: IHeaders }>(
+  fastify.post<{ Body: IOCRBody; Headers: IHeaders; Querystring: IQueryOcr }>(
     '/ocr2',
     { schema: ktpOcrSchemaPost },
     async (request, reply) => {
@@ -473,6 +477,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
       const image = sharp(data);
       const metadata = await image.metadata();
       const { width, height } = metadata;
+      const rotateTimes = request.query.rotate ?? 0;
 
       const processedImg: Sharp =
         left !== undefined &&
@@ -482,6 +487,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         width !== undefined &&
         height !== undefined
           ? sharp(data)
+              .rotate(90 * rotateTimes)
               .extract({
                 left: Math.min(
                   normalizeCoord(left, 320, width),
@@ -501,7 +507,9 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
                 ),
               })
               .resize(1000)
-          : sharp(data).resize(1000);
+          : sharp(data)
+              .rotate(90 * rotateTimes)
+              .resize(1000);
 
       const ktpImg = await processedImg.toBuffer();
       const filename = `ktp/${uid}.${mime.extension(mimetype)}`;

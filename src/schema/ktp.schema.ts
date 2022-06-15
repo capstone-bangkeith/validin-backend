@@ -84,6 +84,11 @@ export const ktpOcrSchemaPost: FastifySchema = {
   body: Type.Object({
     ktp: Type.Any(),
   }),
+  querystring: Type.Optional(
+    Type.Object({
+      rotate: Type.Optional(Type.Number()),
+    })
+  ),
 };
 
 export const ktpSchemaGetAll: FastifySchema = {
