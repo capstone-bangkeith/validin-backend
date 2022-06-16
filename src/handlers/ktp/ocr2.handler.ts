@@ -73,6 +73,16 @@ const ocr2 = (fastify: FastifyInstance) =>
               .resize(1000)
           : image.rotate(90 * rotateTimes).resize(1000);
 
+      const ktpOld = await prisma.ktp.findUnique({
+        where: { uid },
+      });
+
+      const oldFilename = ktpOld?.ktpUrl?.split('/').slice(4).join('/');
+
+      if (oldFilename) {
+        await bucket.file(oldFilename).delete({ ignoreNotFound: true });
+      }
+
       const ktpImg = await processedImg.withMetadata().toBuffer();
       const filename = `ktp/${uid}-${nanoid(8)}.${mime.extension(mimetype)}`;
       const file = bucket.file(filename);
