@@ -19,6 +19,9 @@ updates:
       prefix: 'chore(deps): '
     labels:
       - 'dependencies'
+    ignore:
+      - dependency-name: 'nanoid'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: 'github-actions'
     directory: '/'
