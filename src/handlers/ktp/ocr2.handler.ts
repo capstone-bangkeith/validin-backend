@@ -152,12 +152,12 @@ const ocr2 = (fastify: FastifyInstance) =>
         kewarganegaraan,
       ] = cleanLines;
 
-      const tanggal_lahir = ttl.split(', ')[1];
+      const tanggal_lahir = ttl?.split(', ')[1];
 
       const ktp = {
         provinsi,
         kota,
-        nik: nik.match(/[0-9]{16}/)?.[0] ?? nik,
+        nik: nik?.match(/[0-9]{16}/)?.[0] ?? nik,
         nama,
         ttl,
         jenis_kelamin,

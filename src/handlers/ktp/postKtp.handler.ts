@@ -12,6 +12,7 @@ const postKtp = (fastify: FastifyInstance) =>
     { schema: ktpSchemaPost },
     async (request, reply) => {
       const ktpData: IBody = request.body;
+      console.log(ktpData);
       const { token } = request.headers;
 
       const decodedIdToken = await getAuth().verifyIdToken(token);
@@ -34,13 +35,11 @@ const postKtp = (fastify: FastifyInstance) =>
           message: 'NIK is not valid!, the gender is not matching',
         });
       }
-      const dateFromNik = isFemale
-        ? (+nik.substring(6, 8) - 40).toString()
-        : nik.substring(6, 8) + nik.substring(8, 12);
+      const dateFromNik =
+        (isFemale
+          ? (+nik.substring(6, 8) - 40).toString()
+          : nik.substring(6, 8)) + nik.substring(8, 12);
       if (dateToCompare !== dateFromNik) {
-        console.log(dateNoDash);
-        console.log(date);
-        console.log(dateFromNik);
         return reply.status(httpStatus.BAD_REQUEST).send({
           statusCode: httpStatus.BAD_REQUEST,
           error: 'Bad Request',
