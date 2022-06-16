@@ -3,13 +3,12 @@ import httpStatus from 'http-status';
 
 import { ADMIN_NAME, ADMIN_PW } from '../../config/config';
 import prisma from '../../config/prismaClient';
-import { kodeWilayahSchemaGetAll } from '../../schema/kodeWilayah.schema';
 import { IHeaders, IQuerystring } from './types';
 
 const getAllKtp = (fastify: FastifyInstance) =>
   fastify.get<{ Querystring: IQuerystring; Headers: IHeaders }>(
     '/ktp',
-    { schema: kodeWilayahSchemaGetAll },
+    {},
     async (request, reply) => {
       const { uname, pw } = request.headers;
       if (uname !== ADMIN_NAME || pw !== ADMIN_PW) {
