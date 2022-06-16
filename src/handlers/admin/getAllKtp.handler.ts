@@ -8,7 +8,7 @@ import { IHeaders, IQuerystring } from './types';
 
 const getAllKtp = (fastify: FastifyInstance) =>
   fastify.get<{ Querystring: IQuerystring; Headers: IHeaders }>(
-    '/',
+    '/ktp',
     { schema: kodeWilayahSchemaGetAll },
     async (request, reply) => {
       const { uname, pw } = request.headers;

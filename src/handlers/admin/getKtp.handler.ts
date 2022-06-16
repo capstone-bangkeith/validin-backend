@@ -6,7 +6,7 @@ import prisma from '../../config/prismaClient';
 import { IParams } from './types';
 
 const getKtp = (fastify: FastifyInstance) =>
-  fastify.get<{ Params: IParams }>('/:uid', {}, async (request, reply) => {
+  fastify.get<{ Params: IParams }>('/ktp/:uid', {}, async (request, reply) => {
     const { uname, pw } = request.headers;
     if (uname !== ADMIN_NAME || pw !== ADMIN_PW) {
       return reply.status(httpStatus.FORBIDDEN).send({

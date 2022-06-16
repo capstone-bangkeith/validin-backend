@@ -7,7 +7,7 @@ import { IBody, IParams } from './types';
 
 const updateKtp = (fastify: FastifyInstance) =>
   fastify.put<{ Body: IBody; Params: IParams }>(
-    '/:uid',
+    '/ktp/:uid',
     {},
     async (request, reply) => {
       const { uname, pw } = request.headers;

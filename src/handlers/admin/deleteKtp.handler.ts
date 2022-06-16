@@ -7,7 +7,7 @@ import { IBody, IParams } from './types';
 
 const deleteKtp = (fastify: FastifyInstance) =>
   fastify.delete<{ Body: IBody; Params: IParams }>(
-    '/:uid',
+    '/ktp/:uid',
     {},
     async (request, reply) => {
       const { uname, pw } = request.headers;
