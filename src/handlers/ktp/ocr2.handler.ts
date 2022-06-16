@@ -2,7 +2,7 @@ import { google } from '@google-cloud/vision/build/protos/protos';
 import { FastifyInstance } from 'fastify';
 import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
-import mime from 'mime';
+import mime from 'mime-types';
 import { nanoid } from 'nanoid';
 import sharp, { Sharp } from 'sharp';
 

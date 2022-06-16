@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import mime from 'mime';
+import mime from 'mime-types';
 import sharp, { Sharp } from 'sharp';
 
 import { bucket } from '../../config/cloudStorage';
