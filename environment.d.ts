@@ -10,6 +10,8 @@ declare global {
       CLOUD_STORAGE_CREDS_PATH?: string;
       DATABASE_URL?: string;
       BUCKET_NAME: string;
+      ADMIN_NAME: string;
+      ADMIN_PW: string;
     }
   }
 }

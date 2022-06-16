@@ -20,6 +20,8 @@ export const REDIS_HOST = process.env.REDIS_HOST;
 export const REDIS_EX = 100; // REDIS EXPIRING SECONDS
 export const CLOUD_STORAGE_CREDS_PATH = process.env.CLOUD_STORAGE_CREDS_PATH;
 export const BUCKET_NAME = process.env.BUCKET_NAME;
+export const ADMIN_NAME = process.env.ADMIN_NAME;
+export const ADMIN_PW = process.env.ADMIN_PW;
 
 export default {
   PORT,
@@ -30,4 +32,6 @@ export default {
   REDIS_EX,
   CLOUD_STORAGE_CREDS_PATH,
   BUCKET_NAME,
+  ADMIN_NAME,
+  ADMIN_PW,
 };
