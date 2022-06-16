@@ -19,7 +19,7 @@ const getKtp = (fastify: FastifyInstance) =>
       const data = await prisma.ktp.findUnique({
         where: { uid },
       });
-
+      console.log(data);
       if (!data) {
         return reply.status(httpStatus.NOT_FOUND).send({
           error: httpStatus[httpStatus.NOT_FOUND],

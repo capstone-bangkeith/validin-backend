@@ -22,26 +22,27 @@ export const KtpType = Type.Object(
     status_perkawinan: Type.String(),
     pekerjaan: Type.String(),
     kewarganegaraan: Type.String(),
+    validated: Type.Boolean(),
   },
   { description: 'KTP properties' }
 );
 
 export const KtpPostType = Type.Object(
   {
-    // nama: Type.String({ maxLength: 69, minLength: 2 }),
-    // provinsi: Type.String({ maxLength: 69, minLength: 2 }),
-    // kota: Type.String({ maxLength: 69, minLength: 2 }),
-    // nik: Type.RegEx(/^\d{16}$/),
-    // ttl: Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/),
-    // alamat: Type.String({ maxLength: 50 }),
-    // rt_rw: Type.String({ maxLength: 50 }),
-    // jenis_kelamin: Type.String(),
-    // kel_desa: Type.String({ maxLength: 50 }),
-    // kecamatan: Type.String({ maxLength: 50 }),
-    // agama: Type.String({ maxLength: 20 }),
-    // status_perkawinan: Type.String({ maxLength: 20 }),
-    // pekerjaan: Type.String({ maxLength: 20 }),
-    // kewarganegaraan: Type.String({ maxLength: 20 }),
+    nama: Type.String({ maxLength: 69, minLength: 2 }),
+    provinsi: Type.String({ maxLength: 69, minLength: 2 }),
+    kota: Type.String({ maxLength: 69, minLength: 2 }),
+    nik: Type.RegEx(/^\d{16}$/),
+    ttl: Type.RegEx(/^[A-Za-z ]+, \d{2}-\d{2}-\d{4}$/),
+    alamat: Type.String({ maxLength: 50 }),
+    rt_rw: Type.String({ maxLength: 50 }),
+    jenis_kelamin: Type.String(),
+    kel_desa: Type.String({ maxLength: 50 }),
+    kecamatan: Type.String({ maxLength: 50 }),
+    agama: Type.String({ maxLength: 20 }),
+    status_perkawinan: Type.String({ maxLength: 20 }),
+    pekerjaan: Type.String({ maxLength: 20 }),
+    kewarganegaraan: Type.String({ maxLength: 20 }),
   },
   { description: 'KTP properties' }
 );
