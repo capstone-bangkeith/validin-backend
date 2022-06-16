@@ -1,9 +1,16 @@
 import { config } from 'dotenv';
 import { join as pathJoin } from 'path';
+import yargs from 'yargs/yargs';
 
 config({ path: pathJoin(__dirname, '../../.env') });
 
-export const PORT = process.env.PORT ? +process.env.PORT : 3001;
+export const argv = yargs(process.argv.slice(2))
+  .options({
+    port: { type: 'number' },
+  })
+  .parseSync();
+
+export const PORT = argv.port ?? (process.env.PORT ? +process.env.PORT : 3001);
 export const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
 export const PROJECT_ID = process.env.PROJECT_ID;
