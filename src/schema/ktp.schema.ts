@@ -83,10 +83,15 @@ export const ktpOcrSchemaPost: FastifySchema = {
   description: 'Post KTP OCR',
   body: Type.Object({
     ktp: Type.Any(),
+    left: Type.Optional(Type.Number()),
+    top: Type.Optional(Type.Number()),
+    right: Type.Optional(Type.Number()),
+    bottom: Type.Optional(Type.Number()),
   }),
   querystring: Type.Optional(
     Type.Object({
       rotate: Type.Optional(Type.Number()),
+      aggresive: Type.Optional(Type.Number()),
     })
   ),
 };

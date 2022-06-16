@@ -4,6 +4,7 @@ import type { FastifyPluginAsync } from 'fastify';
 import { getAuth } from 'firebase-admin/auth';
 import httpStatus from 'http-status';
 import mime from 'mime-types';
+import { nanoid } from 'nanoid/async';
 import sharp, { Sharp } from 'sharp';
 import Tesseract from 'tesseract.js';
 
@@ -28,6 +29,7 @@ export type IQuerystring = {
 
 export type IQueryOcr = {
   rotate?: number;
+  aggresive?: number;
 };
 
 export type IBody = {
@@ -47,7 +49,7 @@ export type IBody = {
   kewarganegaraan: string;
 };
 
-type Coordinate = {
+export type Coordinate = {
   x: number;
   y: number;
 };
@@ -510,7 +512,7 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
           : image.rotate(90 * rotateTimes).resize(1000);
 
       const ktpImg = await processedImg.withMetadata().toBuffer();
-      const filename = `ktp/${uid}${Math.random()}.${mime.extension(mimetype)}`;
+      const filename = `ktp/${uid}-${nanoid(8)}.${mime.extension(mimetype)}`;
       const file = bucket.file(filename);
       await file.save(ktpImg);
       const publicUrl = file.publicUrl();
@@ -545,28 +547,30 @@ export const plugin: FastifyPluginAsync = async (fastify) => {
         .map((line) => line.replace(filterRegex, '').replace(':', '').trim())
         .filter((line) => line != '');
 
-      i = 4;
-      while (
-        i < cleanLines.length &&
-        !cleanLines[i].match(/[a-z -]+, ?\d{2}-\d{2}-\d{4}/i)
-      ) {
-        cleanLines[3] += ` ${cleanLines[i++]}`;
-      }
-      cleanLines.splice(4, i - 4);
+      if (request.query.aggresive == 1) {
+        i = 4;
+        while (
+          i < cleanLines.length &&
+          !cleanLines[i].match(/[a-z -]+, ?\d{2}-\d{2}-\d{4}/i)
+        ) {
+          cleanLines[3] += ` ${cleanLines[i++]}`;
+        }
+        cleanLines.splice(4, i - 4);
 
-      i = 7;
-      while (
-        i < cleanLines.length &&
-        !cleanLines[i].match(/[0-9]{3}\/[0-9]{3}/)
-      ) {
-        cleanLines[6] += ` ${cleanLines[i++]}`;
-      }
-      cleanLines.splice(7, i - 7);
+        i = 7;
+        while (
+          i < cleanLines.length &&
+          !cleanLines[i].match(/[0-9]{3}\/[0-9]{3}/)
+        ) {
+          cleanLines[6] += ` ${cleanLines[i++]}`;
+        }
+        cleanLines.splice(7, i - 7);
 
-      if (cleanLines.length < 14) {
-        return replyBadRequest(
-          'Some fields are not detected! Make sure the image was not cropped'
-        );
+        if (cleanLines.length < 14) {
+          return replyBadRequest(
+            'Some fields are not detected! Make sure the image was not cropped'
+          );
+        }
       }
 
       const [
