@@ -32,7 +32,7 @@
     "@fastify/helmet": "^9.1.0",
     "@fastify/multipart": "^7.1.0",
     "@fastify/redis": "^6.0.0",
-    "@fastify/swagger": "^7.3.0",
+    "@fastify/swagger": "^7.6.0",
     "@google-cloud/storage": "^6.1.0",
     "@google-cloud/vision": "^2.4.2",
     "@prisma/client": "^3.15.2",
